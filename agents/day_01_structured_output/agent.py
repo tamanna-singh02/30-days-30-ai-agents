@@ -83,10 +83,17 @@ def run_agent(text: str, show_ui: bool = False) -> Dict[str, Any]:
     return result
 
 if __name__ == "__main__":
-    sample_file_path = os.path.join(
-        os.path.dirname(__file__), "sample_resume.txt"
-    )
-    with open(sample_file_path, "r", encoding="utf-8") as file:
-        resume = file.read()
+    base_dir = os.path.dirname(__file__)
 
-    run_agent(resume, show_ui=True)
+    console.print(Rule("[bold yellow]1. Running Standard Resume (Expected: 0 Retries)[/bold yellow]", style="yellow"))
+    sample_path = os.path.join(base_dir, "sample_resume.txt")
+    with open(sample_path, "r", encoding="utf-8") as f:
+        resume_standard = f.read()
+    run_agent(resume_standard, show_ui=True)
+
+    console.print(Rule("[bold yellow]2. Running Resume with Retries & Self-Correction[/bold yellow]", style="yellow"))
+    retry_sample_path = os.path.join(base_dir, "sample_resume_retry.txt")
+    if os.path.exists(retry_sample_path):
+        with open(retry_sample_path, "r", encoding="utf-8") as f:
+            resume_retry = f.read()
+        run_agent(resume_retry, show_ui=True)

@@ -12,9 +12,8 @@ Extract structured candidate information from resumes.
 Rules:
 1. Return only the requested information.
 2. Do not hallucinate missing information.
-3. If a field is unavailable, use null where appropriate.
+3. Extract only skills directly mentioned in the resume text. Do not invent or extrapolate skills.
 4. years_experience must always be an integer.
-5. primary_skills should contain between 3 and 5 skills whenever possible.
 """
 
 def build_extraction_prompt(resume_text: str) -> str:

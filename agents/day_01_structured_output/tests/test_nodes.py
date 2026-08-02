@@ -33,6 +33,25 @@ def test_validate_node_missing_response():
     assert res.get("validation_error") == "No response generated."
     assert res.get("retry_count") == 1
 
+def test_validate_node_insufficient_skills():
+    profile = CandidateProfile(
+        full_name="Alex Rivera",
+        years_experience=3,
+        primary_skills=["Python"],
+        highest_degree="B.S.",
+        is_hireable=True,
+    )
+    state = {
+        "input_text": "sample text",
+        "retry_count": 0,
+        "raw_response": profile,
+        "validation_error": None,
+        "final_profile": None,
+    }
+    res = validate_node(state)
+    assert "primary_skills" in res.get("validation_error")
+    assert res.get("retry_count") == 1
+
 def test_route_validation_outcomes():
     profile = CandidateProfile(
         full_name="Tamanna Singh",

@@ -51,6 +51,41 @@ def validate_node(state: ExtractorState):
         }
 
     if isinstance(response, CandidateProfile):
+        num_skills = len(response.primary_skills) if response.primary_skills else 0
+
+        # 1. Validate primary skills count
+        if num_skills < 3:
+            err_msg = (
+                f"Validation failed: 'primary_skills' must contain at least 3 skills, "
+                f"but got {num_skills} ({response.primary_skills}). "
+                f"Please re-examine candidate experience and tools to extract at least 3 core skills."
+            )
+            logger.warning(err_msg)
+            return {
+                "validation_error": err_msg,
+                "retry_count": state["retry_count"] + 1,
+            }
+
+        if num_skills > 5:
+            err_msg = (
+                f"Validation failed: 'primary_skills' must contain at most 5 skills, "
+                f"but got {num_skills}. Please select the top 5 core technical skills."
+            )
+            logger.warning(err_msg)
+            return {
+                "validation_error": err_msg,
+                "retry_count": state["retry_count"] + 1,
+            }
+
+        # 2. Validate experience years
+        if response.years_experience < 0:
+            err_msg = "Validation failed: 'years_experience' cannot be negative."
+            logger.warning(err_msg)
+            return {
+                "validation_error": err_msg,
+                "retry_count": state["retry_count"] + 1,
+            }
+
         logger.info("Validation PASSED.")
         return {
             "final_profile": response,
