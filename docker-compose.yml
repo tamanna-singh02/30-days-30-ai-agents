@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: agent_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  day_01_agent:
+    build:
+      context: .
+      dockerfile: agents/day_01_structured_output/Dockerfile
+    container_name: day_01_structured_output
+    env_file:
+      - .env
+    depends_on:
+      - redis
+
+volumes:
+  redis_data:

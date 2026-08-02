@@ -1,0 +1,19 @@
+Tamanna Singh
+
+Software Engineer
+
+Experience
+
+2 years of software engineering experience building web applications using React, Next.js, PostgreSQL and Python.
+
+Skills
+
+Python
+LangGraph
+React
+Next.js
+PostgreSQL
+
+Education
+
+Bachelor of Engineering in Computer Science
