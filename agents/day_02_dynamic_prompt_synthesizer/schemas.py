@@ -6,7 +6,9 @@ class PromptStrategy(BaseModel):
     intent: Literal[
         "email",
         "summarization",
-        "extraction"
+        "extraction",
+        "translation",
+        "code_review"
     ]
 
     tone: str = Field(
@@ -22,7 +24,7 @@ class PromptStrategy(BaseModel):
         description="Extra instructions for the generated response."
     )
 
-    class PromptResponse(BaseModel):
-        """Final synthesized prompt."""
+class PromptResponse(BaseModel):
+    """Final synthesized prompt."""
 
-        prompt: str
+    prompt: str
