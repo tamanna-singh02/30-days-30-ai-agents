@@ -1,20 +1,23 @@
 langchain
 langgraph
-langchain-openai
+
 langchain-community
+langchain-core
+langchain-text-splitters
+
+langchain-openai
+langchain-huggingface
 langchain-chroma
+
 chromadb
 
 pypdf
 
 sentence-transformers
 
-tiktoken
-
+pydantic-settings
 python-dotenv
 
 rich
-
-pydantic-settings
 
 pytest
