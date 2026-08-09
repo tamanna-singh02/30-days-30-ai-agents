@@ -2,8 +2,11 @@ import sys
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
+ROOT_DIR = BASE_DIR.parent.parent
 if str(BASE_DIR) not in sys.path:
     sys.path.insert(0, str(BASE_DIR))
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
 
 if hasattr(sys.stdout, "reconfigure"):
     try:
@@ -12,8 +15,7 @@ if hasattr(sys.stdout, "reconfigure"):
         pass
 
 from rich.console import Console
-
-from rich.panel import Panel
+from rich.markdown import Markdown
 
 from config import settings
 from graph.rag_graph import RAGGraph
@@ -21,161 +23,78 @@ from ingestion.chunker import Chunker
 from ingestion.loader import load_document
 from ingestion.vector_store import VectorStore
 
-
 console = Console()
-
 PDF_PATH = settings.DOCUMENTS_DIR / "report.pdf"
 
 
-
 def ingest_document():
-    """
-    Load, chunk and index the PDF.
-    """
+    """Load, chunk, and index the document with clean text output."""
+    console.print("\n[bold cyan]Vector Document RAG Agent[/bold cyan]")
+    console.print("[dim]Day 06 — LangGraph & ChromaDB System[/dim]\n")
 
-    console.print(
-        "\n[bold cyan]📄 Loading document...[/bold cyan]"
-    )
+    with console.status("[cyan]Loading and indexing document...[/cyan]"):
+        documents = load_document(PDF_PATH)
+        chunker = Chunker(strategy="recursive")
+        chunks = chunker.split_documents(documents)
+        stats = chunker.get_statistics(chunks)
 
-    documents = load_document(
-        PDF_PATH
-    )
+        vector_store = VectorStore()
+        vector_store.add_documents(chunks)
+        total_vectors = vector_store.get_collection_count()
 
-    console.print(
-        f"Loaded [green]{len(documents)}[/green] pages."
-    )
-
-    console.print(
-        "\n[bold cyan]✂️ Chunking document...[/bold cyan]"
-    )
-
-    chunker = Chunker(
-        strategy="recursive"
-    )
-
-    chunks = chunker.split_documents(
-        documents
-    )
-
-    statistics = chunker.get_statistics(
-        chunks
-    )
-
-    console.print(
-        f"Created [green]{statistics['total_chunks']}[/green] chunks."
-    )
-
-    console.print(
-        f"Average chunk length: "
-        f"[yellow]{statistics['average_length']}[/yellow]"
-    )
-
-    console.print(
-        "\n[bold cyan]🧠 Creating embeddings "
-        "and storing vectors...[/bold cyan]"
-    )
-
-    vector_store = VectorStore()
-
-    vector_store.add_documents(
-        chunks
-    )
-
-    count = vector_store.get_collection_count()
-
-    console.print(
-        f"Vector database contains "
-        f"[green]{count}[/green] vectors."
-    )
+    console.print(f"[cyan]Document:[/cyan] {PDF_PATH.name} ([green]{len(documents)} pages[/green])")
+    console.print(f"[cyan]Chunks:[/cyan] [green]{stats['total_chunks']}[/green] created (avg {stats['average_length']} chars)")
+    console.print(f"[cyan]Vector DB:[/cyan] [green]{total_vectors}[/green] vectors stored\n")
 
 
 def ask_questions():
-
-    console.print(
-        Panel(
-            "Vector Document RAG Agent",
-            title="🤖 Day 6",
-        )
-    )
-
-    rag = RAGGraph()
+    """Interactive Q&A loop with simple, elegant text formatting (no tables)."""
+    with console.status("[cyan]Initializing RAG agent...[/cyan]"):
+        rag = RAGGraph()
 
     while True:
-
-        question = console.input(
-            "\n[bold cyan]Ask a question "
-            "(type 'exit' to quit): [/bold cyan]"
-        )
-
-        if question.lower().strip() == "exit":
+        try:
+            question = console.input("[bold cyan]Ask a question[/bold cyan] (type 'exit' to quit): ")
+        except (KeyboardInterrupt, EOFError):
+            console.print("\n[dim]Goodbye.[/dim]")
             break
 
-        if not question.strip():
+        cleaned = question.strip()
+        if not cleaned:
             continue
 
-        console.print(
-            "\n[yellow]🔎 Searching documents...[/yellow]"
-        )
+        if cleaned.lower() in ("exit", "q", "quit"):
+            console.print("\n[dim]Goodbye.[/dim]")
+            break
 
-        result = rag.invoke(
-            question
-        )
+        with console.status("[cyan]Searching documents...[/cyan]"):
+            result = rag.invoke(cleaned)
 
-        console.print(
-            "\n[bold green]Answer:[/bold green]"
-        )
+        answer_text = result.get("answer", "No answer generated.")
+        sources = result.get("sources", [])
 
-        console.print(
-            result.get(
-                "answer",
-                "No answer generated.",
-            )
-        )
-
-        sources = result.get(
-            "sources",
-            [],
-        )
+        console.print("\n[bold green]Answer:[/bold green]")
+        console.print(Markdown(answer_text))
 
         if sources:
-
-            console.print(
-                "\n[bold cyan]Sources:[/bold cyan]"
-            )
-
+            console.print("\n[bold cyan]Sources:[/bold cyan]")
             seen = set()
-
-            for source in sources:
-
-                key = (
-                    source["source"],
-                    source["page"],
-                )
-
+            for s in sources:
+                key = (s["source"], s["page"])
                 if key in seen:
                     continue
-
                 seen.add(key)
+                console.print(f"• [cyan]{s['source']}[/cyan] — Page [green]{s['page']}[/green]")
 
-                console.print(
-                    f"• {source['source']} "
-                    f"— Page {source['page']}"
-                )
+        console.print()
 
 
 def main():
-
     if not PDF_PATH.exists():
-
-        console.print(
-            f"[red]PDF not found: "
-            f"{PDF_PATH}[/red]"
-        )
-
+        console.print(f"[red]PDF file not found at {PDF_PATH}[/red]")
         return
 
     ingest_document()
-
     ask_questions()
 
 

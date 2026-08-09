@@ -1,4 +1,13 @@
+import sys
+from pathlib import Path
 from typing import TypedDict
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+ROOT_DIR = BASE_DIR.parent.parent
+if str(BASE_DIR) not in sys.path:
+    sys.path.insert(0, str(BASE_DIR))
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
 
 from langchain_openai import ChatOpenAI
 from langgraph.graph import END, START, StateGraph
@@ -7,6 +16,7 @@ from config import settings
 from prompts.answer_prompt import get_rag_prompt
 from retrieval.reranker import Reranker
 from retrieval.retriever import Retriever
+
 
 
 class RAGState(TypedDict, total=False):
