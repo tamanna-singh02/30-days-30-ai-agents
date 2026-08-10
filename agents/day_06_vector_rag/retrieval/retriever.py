@@ -39,17 +39,33 @@ class Retriever:
         Retrieve relevant documents using dense vector search.
         """
 
+        retrieval_k = (
+            k
+            if k is not None
+            else settings.RETRIEVAL_K
+        )
+
         results = (
             self.vector_store
             .similarity_search_with_score(
                 query=query,
-                k=k or settings.TOP_K,
+                k=retrieval_k,
             )
         )
 
         retrieved = []
 
         for document, distance in results:
+
+
+            #Chroma returns a distance.
+            #Lower distance -> closer vector
+            if(
+                settings.SIMILARITY_THRESHOLD > 0
+                and distance
+                > settings.SIMILARITY_THRESHOLD
+            ):
+                continue
 
             retrieved.append(
                 RetrievedDocument(

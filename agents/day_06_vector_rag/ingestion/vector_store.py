@@ -73,3 +73,15 @@ class VectorStore:
         chunk_index = document.metadata.get("chunk_index", index)
 
         return f"{source}:{page}:{chunk_index}"
+
+    def reset(self):
+        """
+        Delete all vectors from the current collection.
+        """
+        self.vector_store.delete_collection()
+
+        self.vector_store = Chroma(
+            collection_name=self.collection_name,
+            embedding_function=embedder.get_embedding_model(),
+            persist_directory=str(settings.VECTOR_DB_DIR),
+        )

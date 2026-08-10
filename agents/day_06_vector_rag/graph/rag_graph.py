@@ -26,6 +26,8 @@ class RAGState(TypedDict, total=False):
     context: str
     answer: str
     sources: list
+    retrieval_count: int
+    reranked_count: int
 
 
 class RAGGraph:
@@ -62,11 +64,12 @@ class RAGGraph:
 
         documents = self.retriever.retrieve(
             query=question,
-            k=settings.TOP_K,
+            k=settings.RETRIEVAL_K,
         )
 
         return {
-            "retrieved_documents": documents
+            "retrieved_documents": documents,
+            "retrieval_count": len(documents),
         }
 
     def _rerank(self, state: RAGState):
@@ -88,7 +91,8 @@ class RAGGraph:
         )
 
         return {
-            "reranked_documents": reranked
+            "reranked_documents": reranked,
+            "reranked_count": len(reranked),
         }
 
     def _build_context(
@@ -151,6 +155,36 @@ Page: {display_page}
             "sources": sources,
         }
 
+
+    def _check_context(
+        self, state: RAGState,
+    ):
+        documents = state.get(
+            "reranked_documents",
+            [],
+        )
+
+        if not documents:
+            return {
+                "answer": (
+                    "I couldn't find enough relevant "
+                    "information in the provided document "
+                    "to answer this question."
+                )
+            }
+        
+        return {}
+
+    def _should_generate(self, state: RAGState):
+        documents = state.get(
+            "reranked_documents",
+            [],
+        )
+        if not documents:
+            return "no_context"
+        return "generate_answer"
+    
+
     def _generate_answer(
         self,
         state: RAGState,
@@ -212,6 +246,11 @@ Page: {display_page}
             self._generate_answer,
         )
 
+        workflow.add_node(
+            "no_context",
+            self._check_context,
+        )
+
         workflow.add_edge(
             START,
             "retrieve",
@@ -227,9 +266,13 @@ Page: {display_page}
             "build_context",
         )
 
-        workflow.add_edge(
+        workflow.add_conditional_edges(
             "build_context",
-            "generate_answer",
+             self._should_generate,
+             {
+                "no_context": "no_context",
+                "generate_answer": "generate_answer",
+             }
         )
 
         workflow.add_edge(

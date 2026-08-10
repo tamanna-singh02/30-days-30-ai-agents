@@ -27,13 +27,22 @@ class Settings(BaseSettings):
         "sentence-transformers/all-MiniLM-L6-v2"
     )
 
+    #Chunking
     CHUNK_SIZE: int = 500
-
     CHUNK_OVERLAP: int = 100
 
-    TOP_K: int = 5
 
-    SIMILARITY_THRESHOLD: float = 0.0
+    #Retrieval
+    TOP_K: int = 5
+    RETRIEVAL_K:int = 20
+    SIMILARITY_THRESHOLD: float = 1.5
+
+    #Reranking
+    ENABLE_RERANKING: bool =True
+
+    RERANKER_MODEL: str = (
+        "cross-encoder/ms-marco-MiniLM-L6-v2"
+    )
 
     DOCUMENTS_DIR: Path = (
         BASE_DIR / "documents"

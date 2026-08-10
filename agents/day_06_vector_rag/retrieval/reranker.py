@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from langchain_core.documents import Document
+from sentence_transformers import CrossEncoder
 
+from config import settings
 from retrieval.retriever import RetrievedDocument
 
 
@@ -12,11 +14,18 @@ class RerankedDocument:
 
 class Reranker:
     """
-    Reranks retrieved documents.
+    Cross-encoder based document reranker.
 
-    For the initial implementation, we use the vector similarity distance.
-    A CrossEncoder can be plugged in later.
+    Dense retrieval finds candidate documents quickly.
+    The cross-encoder then evaluates the query and each
+    candidate together for better relevance estimation.
     """
+
+    def __init__(self, model_name: str | None = None):
+
+        self.model_name = model_name or settings.RERANKER_MODEL
+
+        self.model = CrossEncoder(self.model_name)
 
     def rerank(
         self,
@@ -27,19 +36,39 @@ class Reranker:
         if not documents:
             return []
 
-        # Chroma returns distance: lower distance means higher relevance
-        sorted_documents = sorted(
-            documents,
-            key=lambda item: item.score,
+        pairs = [
+            (
+                query,
+                item.document.page_content,
+            )
+            for item in documents
+        ]
+
+        scores = self.model.predict(
+            pairs
         )
 
-        if top_k:
-            sorted_documents = sorted_documents[:top_k]
+        reranked = []
 
-        return [
-            RerankedDocument(
-                document=item.document,
-                score=item.score,
+        for item, score in zip(
+            documents, scores
+        ):
+            reranked.append(
+                RerankedDocument(
+                    document=item.document,
+                    score=float(score),
+                )
             )
-            for item in sorted_documents
-        ]
+
+
+        #CrossEncoder score:
+        #higher = more relevant
+        reranked.sort(
+            key=lambda x: x.score,
+            reverse=True,
+        )
+
+        if top_k is not None:
+            reranked = reranked[:top_k]
+
+        return reranked
