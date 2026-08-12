@@ -1,5 +1,6 @@
 from pathlib import Path
-from langchain_community.document_loaders import PyPDFLoader
+
+from langchain_community.document_loaders import PyPDFLoader, TextLoader
 from langchain_core.documents import Document
 
 
@@ -7,26 +8,26 @@ class DocumentLoader:
     """
     Responsible for loading documents from disk.
 
-    Currently supports PDF files.
+    Supports PDF (.pdf), Markdown (.md), and Text (.txt) files.
     """
 
-    def load_pdf(self, file_path: str | Path) -> list[Document]:
-        """
-        Load a PDF and return LangChain Document objects.
-        """
-
+    def load_document(self, file_path: str | Path) -> list[Document]:
         file_path = Path(file_path)
 
         if not file_path.exists():
             raise FileNotFoundError(f"Document not found: {file_path}")
 
-        if file_path.suffix.lower() != ".pdf":
-            raise ValueError(f"Unsupported file type: {file_path.suffix}")
+        ext = file_path.suffix.lower()
 
-        loader = PyPDFLoader(str(file_path))
-        documents = loader.load()
+        if ext == ".pdf":
+            loader = PyPDFLoader(str(file_path))
+            documents = loader.load()
+        elif ext in (".md", ".txt", ".markdown"):
+            loader = TextLoader(str(file_path), encoding="utf-8")
+            documents = loader.load()
+        else:
+            raise ValueError(f"Unsupported file type: {ext}")
 
-        # Add useful metadata
         for document in documents:
             document.metadata.update(
                 {"source": file_path.name, "file_path": str(file_path)}
@@ -34,14 +35,13 @@ class DocumentLoader:
 
         return documents
 
+    def load_pdf(self, file_path: str | Path) -> list[Document]:
+        return self.load_document(file_path)
+
 
 def load_document(file_path: str | Path) -> list[Document]:
     """
-    Convenience function for loading a documents.
+    Convenience function for loading documents.
     """
-
     loader = DocumentLoader()
-    return loader.load_pdf(file_path)
-
-
-    
+    return loader.load_document(file_path)

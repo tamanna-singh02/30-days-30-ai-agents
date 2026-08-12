@@ -31,3 +31,7 @@ htmlcov/
 
 # Logs
 *.log
+
+# Vector Databases & Embeddings Cache
+**/chroma_db/
+**/database/chroma_db/

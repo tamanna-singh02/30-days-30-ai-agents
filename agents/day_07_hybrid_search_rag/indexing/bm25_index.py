@@ -1,35 +1,53 @@
+import re
+from langchain_core.documents import Document
 from rank_bm25 import BM25Okapi
+
 
 class BM25Index:
 
-    def __init__(self, documents):
+    def __init__(self, documents: list[Document]):
         self.documents = documents
-
-        tokenized_documents = [
-            self._tokenize(doc.page_content)
-            for doc in documents
-        ]
-
-        self.index = BM25Okapi(tokenized_documents)
+        if documents:
+            tokenized_documents = [
+                self._tokenize(document.page_content)
+                for document in documents
+            ]
+            self.bm25 = BM25Okapi(tokenized_documents)
+        else:
+            self.bm25 = None
 
     @staticmethod
-    def _tokenize(text:str):
-        return text.lower().split()
+    def _tokenize(text: str):
+        return re.findall(
+            r"[a-zA-Z0-9_]+",
+            text.lower(),
+        )
 
-    def search(self, query:str, k: int = 20):
+    def search(self, query: str, k: int = 20):
+        if not self.documents or not self.bm25:
+            return []
+
         tokenized_query = self._tokenize(query)
-        scores = self.index.get_scores(tokenized_query)
+        scores = self.bm25.get_scores(tokenized_query)
 
         ranked_indices = sorted(
             range(len(scores)),
             key=lambda i: scores[i],
-            reverse=True
+            reverse=True,
         )[:k]
 
-        return[{
-            "document": self.documents[i],
-            "score":scores[i],
-            "rank": rank + 1
-        } for rank, i in enumerate(ranked_indices)]
+        results = []
 
-    
+        for rank, index in enumerate(
+            ranked_indices,
+            start=1,
+        ):
+            results.append(
+                {
+                    "document": self.documents[index],
+                    "score": float(scores[index]),
+                    "rank": rank,
+                }
+            )
+
+        return results

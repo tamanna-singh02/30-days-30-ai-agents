@@ -22,18 +22,16 @@ class VectorStore:
 
     def add_documents(self, documents: list[Document]) -> list[str]:
         """
-        Add documents to the vector database.
+        Add documents to the vector database and populate chunk_id in metadata.
         """
         if not documents:
             return []
 
-        ids = [
-            self._create_document_id(
-                document,
-                index,
-            )
-            for index, document in enumerate(documents)
-        ]
+        ids = []
+        for index, document in enumerate(documents):
+            doc_id = self._create_document_id(document, index)
+            ids.append(doc_id)
+            document.metadata["chunk_id"] = doc_id
 
         self.vector_store.add_documents(
             documents=documents,
@@ -74,6 +72,27 @@ class VectorStore:
 
         return f"{source}:{page}:{chunk_index}"
 
+    def get_documents(self) -> list[Document]:
+        """
+        Retrieve all documents stored in the Chroma collection, ensuring
+        document.metadata['chunk_id'] is present.
+        """
+        collection_data = self.vector_store._collection.get(
+            include=["documents", "metadatas"]
+        )
+        ids = collection_data.get("ids") or []
+        contents = collection_data.get("documents") or []
+        metadatas = collection_data.get("metadatas") or []
+
+        documents = []
+        for doc_id, content, metadata in zip(ids, contents, metadatas):
+            meta = dict(metadata or {})
+            if "chunk_id" not in meta or not meta["chunk_id"]:
+                meta["chunk_id"] = doc_id
+            documents.append(Document(page_content=content, metadata=meta))
+        return documents
+
+
     def reset(self):
         """
         Delete all vectors from the current collection.
@@ -85,3 +104,6 @@ class VectorStore:
             embedding_function=embedder.get_embedding_model(),
             persist_directory=str(settings.VECTOR_DB_DIR),
         )
+
+
+   
