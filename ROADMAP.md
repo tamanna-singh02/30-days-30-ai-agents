@@ -34,10 +34,10 @@ Week 4: Multi-Agent Systems & Enterprise Scaling
 | [x] | **01** | [Structured Data Extractor](./agents/day_01_structured_output) | Schema Enforcer, Self-Healing Retries & Pydantic Guardrails | LangGraph, Pydantic, Pytest |
 | [x] | **02** | [Dynamic Prompt Synthesizer](./agents/day_02_dynamic_prompt_synthesizer) | Meta-Prompting, Context Hydration & System Prompt Versioning | LangChain, LangGraph, Jinja2 |
 | [x] | **03** | [Stateful Thread Assistant](./agents/day_03_stateful_thread_assistant) | Thread Persistence, State Diffing & SQLite Checkpointers | LangGraph, SQLite, Pydantic |
-| [ ] | **04** | **Map-Reduce Summarizer** | Context Window Budgeting & Parallel Hierarchical Chunking | Tiktoken, LangGraph, Asyncio |
-| [ ] | **05** | **Persistent Semantic Memory** | Long-Term Key-Value Store + Vector Memory Retrieval | Redis, ChromaDB, LangChain |
-| [ ] | **06** | **Vector Document RAG Agent** | Chunking Trade-offs, Dense Vector Search & Citations | ChromaDB, LangChain, PyPDF |
-| [ ] | **07** | **Hybrid Search RAG Agent** | Dense Vectors + Sparse BM25 with Relevance Re-ranking | FlashRank, BM25, ChromaDB |
+| [x] | **04** | [Map-Reduce Summarizer](./agents/day_04_map_reduce_summarizer) | Context Window Budgeting & Parallel Hierarchical Chunking | Tiktoken, LangGraph, Asyncio |
+| [x] | **05** | [Persistent Semantic Memory](./agents/day_05_persistent_semantic_memory) | Long-Term Key-Value Store + Vector Memory Retrieval | Redis, ChromaDB, LangChain |
+| [x] | **06** | [Vector Document RAG Agent](./agents/day_06_vector_rag) | Chunking Trade-offs, Dense Vector Search & Citations | ChromaDB, LangChain, PyPDF |
+| [x] | **07** | [Hybrid Search RAG Agent](./agents/day_07_hybrid_search_rag) | Dense Vectors + Sparse BM25 with Relevance Re-ranking | FlashRank, BM25, ChromaDB |
 
 ---
 
@@ -45,8 +45,8 @@ Week 4: Multi-Agent Systems & Enterprise Scaling
 
 | Status | Day | Agent Name | Core Architectural Pattern | Tech Stack |
 | :---: | :---: | :--- | :--- | :--- |
-| [ ] | **08** | **Knowledge Graph RAG Agent** | Entity Extraction, Graph Traversal & Relationship Queries | NetworkX / Neo4j, LangChain |
-| [ ] | **09** | **Safe SQL Query Agent** | Schema Introspection, Read-Only DB Locks & AST Guardrails | SQLAlchemy, SQLite, Pydantic |
+| [x] | **08** | [Safe SQL Query Agent](./agents/day_08_safe_sql_agent) | Schema Introspection, Read-Only DB Locks & AST Guardrails | SQLGlot, PostgreSQL / SQLite, LangGraph |
+| [ ] | **09** | **Knowledge Graph RAG Agent** | Entity Extraction, Graph Traversal & Relationship Queries | NetworkX / Neo4j, LangChain |
 | [ ] | **10** | **Tool Calling Agent** | Dynamic Tool Selection, Function Routing & Schema Binding | OpenAI Tools, Pydantic, Requests |
 | [ ] | **11** | **REST API Orchestrator** | OpenAPI Spec Parsing, Endpoint Binding & Dynamic Auth | FastAPI, Requests, Pydantic |
 | [ ] | **12** | **Workspace Automation Agent** | File System Traversal & Pre-flight Destructive Checklists | Python `pathlib`, Shutil, Pytest |

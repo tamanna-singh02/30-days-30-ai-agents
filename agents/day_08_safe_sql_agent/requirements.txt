@@ -1,0 +1,3 @@
+# Day 08 Safe SQL Agent Dependencies
+sqlglot>=23.0.0
+sqlalchemy>=2.0.0
