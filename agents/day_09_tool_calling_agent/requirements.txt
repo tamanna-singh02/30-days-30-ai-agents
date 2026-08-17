@@ -1,0 +1,6 @@
+openai
+pydantic
+requests
+python-dotenv
+simpleeval
+rich

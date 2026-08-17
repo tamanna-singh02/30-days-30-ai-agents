@@ -46,12 +46,12 @@ Week 4: Multi-Agent Systems & Enterprise Scaling
 | Status | Day | Agent Name | Core Architectural Pattern | Tech Stack |
 | :---: | :---: | :--- | :--- | :--- |
 | [x] | **08** | [Safe SQL Query Agent](./agents/day_08_safe_sql_agent) | Schema Introspection, Read-Only DB Locks & AST Guardrails | SQLGlot, PostgreSQL / SQLite, LangGraph |
-| [ ] | **09** | **Knowledge Graph RAG Agent** | Entity Extraction, Graph Traversal & Relationship Queries | NetworkX / Neo4j, LangChain |
-| [ ] | **10** | **Tool Calling Agent** | Dynamic Tool Selection, Function Routing & Schema Binding | OpenAI Tools, Pydantic, Requests |
-| [ ] | **11** | **REST API Orchestrator** | OpenAPI Spec Parsing, Endpoint Binding & Dynamic Auth | FastAPI, Requests, Pydantic |
-| [ ] | **12** | **Workspace Automation Agent** | File System Traversal & Pre-flight Destructive Checklists | Python `pathlib`, Shutil, Pytest |
-| [ ] | **13** | **Code Inspector & AST Agent** | Abstract Syntax Trees (AST), Static Analysis & Linting | Python `ast`, Flake8, Black |
-| [ ] | **14** | **Headless Browser Scraper** | Dynamic DOM Navigation, Scraping & Markdown Compilation | Playwright, LangGraph, BeautifulSoup4 |
+| [x] | **09** | [Tool Calling Agent](./agents/day_09_tool_calling_agent) | Dynamic Tool Selection, Function Routing & Schema Binding | OpenAI / Groq, Pydantic, Requests, Rich |
+| [ ] | **10** | **REST API Orchestrator** | OpenAPI Spec Parsing, Endpoint Binding & Dynamic Auth | FastAPI, Requests, Pydantic |
+| [ ] | **11** | **Workspace Automation Agent** | File System Traversal & Pre-flight Destructive Checklists | Python `pathlib`, Shutil, Pytest |
+| [ ] | **12** | **Code Inspector & AST Agent** | Abstract Syntax Trees (AST), Static Analysis & Linting | Python `ast`, Flake8, Black |
+| [ ] | **13** | **Headless Browser Scraper** | Dynamic DOM Navigation, Scraping & Markdown Compilation | Playwright, LangGraph, BeautifulSoup4 |
+| [ ] | **14** | **Policy Engine & Guardrails** | Sentiment Scoring, Prompt Injection Defenses & Policy Routing | Guardrails AI, Slack SDK, Pydantic |
 
 ---
 
@@ -61,11 +61,11 @@ Week 4: Multi-Agent Systems & Enterprise Scaling
 | :---: | :---: | :--- | :--- | :--- |
 | [ ] | **15** | **Voice Agent** | Speech-to-Text, Streaming Agent State & Audio Delivery | Whisper, ElevenLabs / gTTS, PyAudio |
 | [ ] | **16** | **Vision RAG Agent** | Multimodal Layout Parsing (Charts, Diagrams & PDFs) | Vision LLM, PyMuPDF, OpenCV |
-| [ ] | **17** | **Chart & Data Visualizer** | Visual Code Generation, Execution & Matplotlib Rendering | Matplotlib, Pandas, Vision LLM |
-| [ ] | **18** | **Code Sandbox Agent** | Subprocess Execution, Timeouts & Exception Refinement Loops | Python `subprocess`, Resource Limits |
-| [ ] | **19** | **Plan & Execute Reasoning Agent** | Explicit Task Decomposition, Dynamic Re-planning & Task Graphs | LangGraph Custom State |
-| [ ] | **20** | **Reflection Loop Agent** | Generator vs. Critic Node Iterative Refinement | LangGraph Conditional Edges |
-| [ ] | **21** | **Policy Engine & Guardrails** | Sentiment Scoring, Prompt Injection Defenses & Policy Routing | Guardrails AI, Slack SDK, Pydantic |
+| [ ] | **17** | **Knowledge Graph RAG Agent** | Entity Extraction, Graph Traversal & Relationship Queries | NetworkX / Neo4j, LangChain |
+| [ ] | **18** | **Chart & Data Visualizer** | Visual Code Generation, Execution & Matplotlib Rendering | Matplotlib, Pandas, Vision LLM |
+| [ ] | **19** | **Code Sandbox Agent** | Subprocess Execution, Timeouts & Exception Refinement Loops | Python `subprocess`, Resource Limits |
+| [ ] | **20** | **Plan & Execute Reasoning Agent** | Explicit Task Decomposition, Dynamic Re-planning & Task Graphs | LangGraph Custom State |
+| [ ] | **21** | **Reflection Loop Agent** | Generator vs. Critic Node Iterative Refinement | LangGraph Conditional Edges |
 
 ---
 
