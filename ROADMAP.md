@@ -47,7 +47,7 @@ Week 4: Multi-Agent Systems & Enterprise Scaling
 | :---: | :---: | :--- | :--- | :--- |
 | [x] | **08** | [Safe SQL Query Agent](./agents/day_08_safe_sql_agent) | Schema Introspection, Read-Only DB Locks & AST Guardrails | SQLGlot, PostgreSQL / SQLite, LangGraph |
 | [x] | **09** | [Tool Calling Agent](./agents/day_09_tool_calling_agent) | Dynamic Tool Selection, Function Routing & Schema Binding | OpenAI / Groq, Pydantic, Requests, Rich |
-| [ ] | **10** | **REST API Orchestrator** | OpenAPI Spec Parsing, Endpoint Binding & Dynamic Auth | FastAPI, Requests, Pydantic |
+| [x] | **10** | [REST API Orchestrator](./agents/day_10_rest_api_orchestrator) | OpenAPI Spec Parsing, Endpoint Binding & Dynamic Auth | FastAPI, Requests, Pydantic |
 | [ ] | **11** | **Workspace Automation Agent** | File System Traversal & Pre-flight Destructive Checklists | Python `pathlib`, Shutil, Pytest |
 | [ ] | **12** | **Code Inspector & AST Agent** | Abstract Syntax Trees (AST), Static Analysis & Linting | Python `ast`, Flake8, Black |
 | [ ] | **13** | **Headless Browser Scraper** | Dynamic DOM Navigation, Scraping & Markdown Compilation | Playwright, LangGraph, BeautifulSoup4 |
